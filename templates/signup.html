@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dash.css">
+    <title>Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .background { 
+            background-image: url('letter.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            color: white; 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            flex-direction: column; 
+        }
+        .navbar {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            background-color: rgba(35, 36, 36, 0.8); 
+            border-radius: 5px; 
+            display: flex; 
+            padding: 10px; 
+        }
+        .navbar a {
+            background-color: #4cacaf; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            text-decoration: none; 
+            margin: 0 10px; 
+            transition: background-color 0.3s; 
+        }
+        .navbar a:hover {
+            background-color: #8e3e63; 
+        }
+        .form-container {
+            background-color: rgb(10, 10, 10);
+            padding: 40px; 
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 400px; 
+            height: auto; 
+            font-size: 16px; 
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            background-color: #ac23a0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #3e4da3;
+        }
+        p {
+            text-align: center;
+        }
+        .flash-message {
+    padding: 10px;
+    margin: 20px 0;
+    border: 1px solid red;
+    background-color: #f8d7da;
+    color: #721c24;
+    display: none; 
+}
+
+.flash-message.success {
+    border-color: green;
+    background-color: #d4edda;
+    color: #155724;
+}
+    
+    </style>
+    <script>
+
+document.getElementById('signupForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+
+    const passwordInput = document.getElementById('password');
+    const password = passwordInput.value;
+
+
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+    if (!passwordPattern.test(password)) {
+        showFlashMessage('Password must be at least 6 characters long, include at least one letter, one number, and one special character.', 'error');
+    } else if (password !== confirmPassword) {
+        showFlashMessage('Passwords do not match.', 'error');
+    } else {
+        showFlashMessage('Registration successful!', 'success');
+        
+    }
+        
+    }
+);
+
+function showFlashMessage(message, type) {
+    const flashMessageDiv = document.getElementById('flash-message');
+    flashMessageDiv.textContent = message;
+    flashMessageDiv.className = 'flash-message';
+    flashMessageDiv.style.display = 'block'; 
+   
+    setTimeout(() => {
+        flashMessageDiv.style.display = 'none';
+    }, 3000);
+}
+    </script>
+</head>
+<body class="background">
+    <div class="form-container">
+        <h2>Sign Up</h2>
+
+        <div class="flash-message" id="flash-message" style="display: none;"></div>
+
+        <form method="post" action="{{ url_for('signup') }}">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required aria-label="Username">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" required 
+                aria-label="Phone Number"
+                pattern="^254\d{9}$" 
+                       title="Phone number must start with 254 and have a total of 12 digits.">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required 
+
+                aria-label="Password" 
+                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$" 
+                title="Password must be at least 6 characters long, include at least one letter, one number, and one special character.">
+
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required 
+                aria-label="Confirm Password"
+                pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$" 
+                title="Password must match .">
+            </div>
+            <button type="submit">Sign Up</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login</a></p>
+    </div>
+</body>
+</html>

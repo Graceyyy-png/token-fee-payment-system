@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zugo Fee Payment Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .nav-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    .nav-button a {
+        color: white;  
+        text-decoration: none;
+        font-size: 16px;
+        padding: 10px 15px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-button a:hover {
+        color: #4CAF50;  
+    }
+
+        .dashboard-container {
+            display: flex;
+            margin: 20px;
+            gap: 20px;
+        }
+
+        .menu-container {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+        }
+
+        .dashboard-header {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: scale(1.02);
+        }
+
+        .section-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons, .wallet-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .nav-button:hover {
+            color: #4CAF50;
+        }
+
+        .wallet-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .menu-item {
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .popup-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .popup-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .popup-form button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-form button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.8rem;
+            margin-top: -10px;
+            display: none;
+        }
+        .wallet-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .wallet-popup-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .wallet-popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .wallet-connection-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .wallet-types {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .wallet-type {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .wallet-type:hover {
+            background-color: #f0f0f0;
+        }
+
+        .wallet-type.selected {
+            background-color: #e0e0e0;
+            border: 1px solid #4CAF50;
+        }
+
+        .wallet-type img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+
+        .wallet-address-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .connect-wallet-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .connect-wallet-btn:hover {
+            background-color: #aa33aa;
+        }
+
+        .wallet-error {
+            color: red;
+            font-size: 0.8rem;
+            margin-top: -10px;
+            display: none;
+        }
+        .payment-method-popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .payment-method-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 500px;
+        max-width: 90%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+    }
+
+    .payment-method-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .payment-options {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+
+    .payment-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .payment-option:hover {
+        background-color: #f0f0f0;
+    }
+
+    .payment-option.selected {
+        background-color: #e0e0e0;
+        border: 1px solid #4CAF50;
+    }
+
+    /* Mini Popup Styles */
+    .mini-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        z-index: 1100;
+        width: 350px;
+    }
+
+    .mini-popup-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 24px;
+    }
+
+    .mini-popup-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .mini-popup-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+    .mini-popup-submit {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.8rem;
+        margin-top: -10px;
+        display: none;
+    }
+    .logout-item {
+    margin-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    color: #ff4444;
+    transition: background-color 0.3s ease;
+}
+
+.logout-item:hover {
+    background-color: #ffdddd;
+}
+
+.logout-item span {
+    margin-right: 10px;
+}
+
+a {
+        text-decoration: none;
+    }
+
+    .nav-button {
+        text-decoration: none;
+        cursor: pointer;
+        text-decoration-color: #f4f4f4;
+    }
+
+    .section {
+        text-decoration: none;
+    }
+
+    .menu-item {
+        text-decoration: none;
+    }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo"> Zugo  Crypto to Fee</div>
+        <div class="nav-buttons">
+            <button class="nav-button"> <a href="#dashboard-header">Dashboard</button>
+            <button class="nav-button">Transactions</button>
+            <button class="nav-button">Payments</button>
+            <button class="nav-button">Settings</button>
+        </div>
+        <button class="wallet-button">
+            💰 $5,234.56
+        </button>
+    </nav>
+
+    <div class="dashboard-container">
+        <div class="menu-container">
+            <div class="menu-item">📊 Overview</div>
+            <div class="menu-item">💸 Fee Payments</div>
+            <div class="menu-item">📝 Billing History</div>
+            <div class="menu-item">🔗 Connected Wallets</div>
+            <div class="menu-item">🛠️ Payment Settings</div>
+            <div class="menu-item logout-item" id="logout-button">
+                <span>🚪</span> Logout
+            </div>
+        </div>
+        
+        <main class="main-content">
+            <header class="dashboard-header" id="dashboard-header">
+                <h1>Zugo Dashboard</h1>
+                <p>Manage your cryptocurrency fee payments and transactions</p>
+            </header>
+
+            <section class="section" id="payment-method-section">
+                <div class="section-icon">💳</div>
+                <h2 class="section-title">Payment Methods</h2>
+                <p>Select and manage your payment transfer methods</p>
+                
+                </section>
+
+                <section class="section" id="transfer-overview-section">
+                    <div class="section-icon">📊 </div>
+                    <h2 class="section-title">transfer Overview</h2>
+                    <p>Select and manage your payment transfer methods</p>
+                </section>
+
+                <section class="section" id="wallet-connection-section">
+                    <div class="section-icon">🌐</div>
+                    <h2 class="section-title">Connect Wallet</h2>
+                    <p>Link your cryptocurrency wallet for seamless transactions</p>
+                </section>
+
+                <section class="section">
+                    <div class="section-icon">📈</div>
+                    <h2 class="section-title">Fee Analytics</h2>
+                    <p>Analyze your transaction fees and spending patterns</p>
+                </section>
+                <section class="section" id="connect-section">
+                    <div class="section-icon">🏦</div>
+                    <h2 class="section-title">Connect M-Pesa/Bank</h2>
+                    <p>Link your mobile money or bank account for seamless transactions</p>
+                </section>
+            </div>
+        </main>
+
+
+
+        <div class="wallet-popup" id="wallet-popup">
+            <div class="wallet-popup-content">
+                <span class="wallet-popup-close">&times;</span>
+                <form class="wallet-connection-form" id="wallet-connection-form">
+                    <h2>Connect Cryptocurrency Wallet</h2>
+                    
+                    <div class="wallet-types">
+                        <div class="wallet-type" data-wallet="metamask">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask">
+                            <span>MetaMask</span>
+                        </div>
+                        <div class="wallet-type" data-wallet="coinbase">
+                            <img src="https://www.coinbase.com/img/favicon.ico" alt="Coinbase">
+                            <span>Coinbase</span>
+                        </div>
+                        <div class="wallet-type" data-wallet="trust">
+                            <img src="https://trustwallet.com/assets/images/media/logo.png" alt="Trust Wallet">
+                            <span>Trust Wallet</span>
+                        </div>
+                    </div>
+    
+                    <input 
+                        type="text" 
+                        id="wallet-address" 
+                        class="wallet-address-input" 
+                        placeholder="Enter Wallet Address (0x...)" 
+                        required
+                    />
+                    <div id="wallet-address-error" class="wallet-error">
+                        Please enter a valid wallet address
+                    </div>
+    
+                    <button type="submit" class="connect-wallet-btn">
+                        Connect Wallet
+                    </button>
+                </form>
+                </div>
+                </div>
+
+                
+          <!-- Popup for M-Pesa/Bank Connection -->
+    <div class="popup" id="connection-popup">
+        <div class="popup-content">
+            <span class="popup-close">&times;</span>
+            <form class="popup-form" id="connection-form">
+                <h2>Connect Payment Method</h2>
+                
+                <label for="payment-type">Select Payment Method</label>
+                <select id="payment-type" required>
+                    <option value="">Select Method</option>
+                    <option value="mpesa">M-Pesa</option>
+                    <option value="bank">Bank Account</option>
+                </select>
+
+                <label for="phone-number">Phone Number</label>
+                <input 
+                    type="tel" 
+                    id="phone-number" 
+                    placeholder="Enter 10-digit phone number" 
+                    required 
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                />
+                <div id="phone-error" class="error-message">
+                    Please enter a valid 10-digit phone number
+                </div>
+
+                <label for="account-number">Account Number</label>
+                <input 
+                    type="text" 
+                    id="account-number" 
+                    placeholder="Enter 10-16 digit account number" 
+                    required 
+                    pattern="[0-9]{10,16}"
+                    maxlength="16"
+                />
+                <div id="account-error" class="error-message">
+                    Please enter a valid 10-16 digit account number
+                </div>
+
+                <button type="submit">Connect Account</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="payment-method-popup" id="payment-method-popup">
+        <div class="payment-method-content">
+            <span class="payment-method-close">&times;</span>
+            <h2>Select Transfer Method</h2>
+            
+            <div class="payment-options">
+                <div class="payment-option" data-method="wallet-to-mpesa">
+                    <span>💸</span>
+                    <p>Wallet to M-Pesa</p>
+                </div>
+                <div class="payment-option" data-method="wallet-to-bank">
+                    <span>🏦</span>
+                    <p>Wallet to Bank</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mini-popup" id="mpesa-mini-popup">
+        <span class="mini-popup-close">&times;</span>
+        <form class="mini-popup-form" id="mpesa-form">
+            <h3>M-Pesa Transfer Details</h3>
+            
+            <div class="payment-options">
+                <div class="payment-option" data-mpesa-type="phone">
+                    <span>📱</span>
+                    <p>Phone Number</p>
+                </div>
+                <div class="payment-option" data-mpesa-type="paybill">
+                    <span>💳</span>
+                    <p>Paybill</p>
+                </div>
+            </div>
+    
+            <!-- Phone Number Input -->
+            <div id="phone-section" style="display:none;">
+                <input 
+                    type="tel" 
+                    class="mini-popup-input" 
+                    id="mpesa-phone-number" 
+                    placeholder="Enter 10-digit phone number"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                    required
+                />
+                <div id="mpesa-phone-error" class="error-message">
+                    Please enter a valid 10-digit phone number
+                </div>
+            </div>
+    
+            <!-- Paybill Section -->
+            <div id="paybill-section" style="display:none;">
+                <input 
+                    type="text" 
+                    class="mini-popup-input" 
+                    id="paybill-number" 
+                    placeholder="Enter Business Number"
+                    required
+                />
+                <input 
+                    type="text" 
+                    class="mini-popup-input" 
+                    id="paybill-account" 
+                    placeholder="Enter Account Number"
+                    required
+                />
+            </div>
+    
+            <button type="submit" class="mini-popup-submit">Proceed Transfer</button>
+        </form>
+    </div>
+    
+    <!-- Bank Transfer Mini Popup -->
+    <div class="mini-popup" id="bank-mini-popup">
+        <span class="mini-popup-close">&times;</span>
+        <form class="mini-popup-form" id="bank-form">
+            <h3>Bank Transfer Details</h3>
+            
+            <input 
+                type="text" 
+                class="mini-popup-input" 
+                id="bank-name" 
+                placeholder="Enter Bank Name"
+                required
+            />
+            
+            <input 
+                type="text" 
+                class="mini-popup-input" 
+                id="bank-account" 
+                placeholder="Enter Account Number (10-16 digits)"
+                pattern="[0-9]{10,16}"
+                maxlength="16"
+                required
+            />
+            <div id="bank-account-error" class="error-message">
+                Please enter a valid 10-16 digit account number
+            </div>
+    
+            <button type="submit" class="mini-popup-submit">Proceed Transfer</button>
+        </form>
+    </div>
+
+    
+
+    <script>
+        // Interactive menu items
+        document.querySelectorAll('.menu-item, .section').forEach(item => {
+            item.addEventListener('click', () => {
+                console.log(`Clicked: ${item.textContent.trim()}`);
+                // Add your custom interaction logic here
+            });
+        });
+
+        // Popup Functionality
+        const connectSection = document.getElementById('connect-section');
+        const popup = document.getElementById('connection-popup');
+        const popupClose = document.querySelector('.popup-close');
+        const connectionForm = document.getElementById('connection-form');
+        const phoneInput = document.getElementById('phone-number');
+        const accountInput = document.getElementById('account-number');
+        const phoneError = document.getElementById('phone-error');
+        const accountError = document.getElementById('account-error');
+
+        // Open Popup
+        connectSection.addEventListener('click', () => {
+            popup.style.display = 'flex';
+        });
+
+        // Close Popup
+        popupClose.addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+
+        // Validate Phone Number
+        phoneInput.addEventListener('input', () => {
+            const phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phoneInput.value)) {
+                phoneError.style.display = 'block';
+                phoneInput.setCustomValidity('Invalid phone number');
+            } else {
+                phoneError.style.display = 'none';
+                phoneInput.setCustomValidity('');
+            }
+        });
+
+        // Validate Account Number
+        accountInput.addEventListener('input', () => {
+            const accountPattern = /^[0-9]{10,16}$/;
+            if (!accountPattern.test(accountInput.value)) {
+                accountError.style.display = 'block';
+                accountInput.setCustomValidity('Invalid account number');
+            } else {
+                accountError.style.display = 'none';
+                accountInput.setCustomValidity('');
+            }
+        });
+
+        // Form Submission
+        connectionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const paymentType = document.getElementById('payment-type').value;
+            const phoneNumber = phoneInput.value;
+            const accountNumber = accountInput.value;
+
+            // Validate all fields
+            if (paymentType && phoneNumber && accountNumber) {
+                // Successful connection
+                alert(`Successfully connected ${paymentType} account\nPhone: ${phoneNumber}\nAccount: ${accountNumber}`);
+                popup.style.display = 'none';
+                connectionForm.reset();
+            }
+        });
+
+        // Close popup when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                popup.style.display = 'none';
+            }
+        });
+
+                // Wallet Connection Popup Functionality
+                const walletConnectionSection = document.getElementById('wallet-connection-section');
+        const walletPopup = document.getElementById('wallet-popup');
+        const walletPopupClose = document.querySelector('.wallet-popup-close');
+        const walletConnectionForm = document.getElementById('wallet-connection-form');
+        const walletAddressInput = document.getElementById('wallet-address');
+        const walletAddressError = document.getElementById('wallet-address-error');
+        const walletTypeElements = document.querySelectorAll('.wallet-type');
+
+        // Open Wallet Popup
+        walletConnectionSection.addEventListener('click', () => {
+            walletPopup.style.display = 'flex';
+        });
+
+        // Close Wallet Popup
+        walletPopupClose.addEventListener('click', () => {
+            walletPopup.style.display = 'none';
+        });
+
+        // Wallet Type Selection
+        walletTypeElements.forEach(walletType => {
+            walletType.addEventListener('click', () => {
+                // Remove selected class from all wallet types
+                walletTypeElements.forEach(type => {
+                    type.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked wallet type
+                walletType.classList.add('selected');
+            });
+        });
+
+        // Validate Wallet Address
+        walletAddressInput.addEventListener('input', () => {
+            // Basic Ethereum address validation (starts with 0x and is 42 characters long)
+            const walletAddressPattern = /^0x[a-fA-F0-9]{40}$/;
+            
+            if (!walletAddressPattern.test(walletAddressInput.value)) {
+                walletAddressError.style.display = 'block';
+                walletAddressInput.setCustomValidity('Invalid wallet address');
+            } else {
+                walletAddressError.style.display = 'none';
+                walletAddressInput.setCustomValidity('');
+            }
+        });
+
+        // Form Submission
+        walletConnectionForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const selectedWallet = document.querySelector('.wallet-type.selected');
+            const walletAddress = walletAddressInput.value;
+
+            // Validate all fields
+            if (selectedWallet && walletAddress) {
+                const walletName = selectedWallet.getAttribute('data-wallet');
+                
+                // Successful wallet connection
+                alert(`Successfully connected ${walletName} wallet\nAddress: ${walletAddress}`);
+                
+                walletPopup.style.display = 'none';
+                walletConnectionForm.reset();
+                
+                // Remove selected state from wallet types
+                walletTypeElements.forEach(type => {
+                    type.classList.remove('selected');
+                });
+            } else {
+                alert('Please select a wallet an d enter a valid wallet address.');
+            }
+        });
+
+        // Close wallet popup when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === walletPopup) {
+                walletPopup.style.display = 'none';
+            }
+        });
+// Payment Method Popup Logic
+const paymentMethodSection = document.getElementById('payment-method-section');
+const paymentMethodPopup = document.getElementById('payment-method-popup');
+const paymentMethodClose = document.querySelector('.payment-method-close');
+const paymentMethodOptions = document.querySelectorAll('.payment-option[data-method]');
+
+// M-Pesa Mini Popup Elements
+const mpesaMiniPopup = document.getElementById('mpesa-mini-popup');
+const mpesaForm = document.getElementById('mpesa-form');
+const mpesaMiniClose = mpesaMiniPopup.querySelector('.mini-popup-close');
+const mpesaPhoneSection = document.getElementById('phone-section');
+const paybillSection = document.getElementById('paybill-section');
+const mpesaPhoneInput = document.getElementById('mpesa-phone-number');
+const mpesaPhoneError = document.getElementById('mpesa-phone-error');
+
+// Bank Mini Popup Elements
+const bankMiniPopup = document.getElementById('bank-mini-popup');
+const bankForm = document.getElementById('bank-form');
+const bankMiniClose = bankMiniPopup.querySelector('.mini-popup-close');
+const bankAccountError = document.getElementById('bank-account-error');
+
+// Open Payment Method Popup
+paymentMethodSection.addEventListener('click', () => {
+    paymentMethodPopup.style.display = 'flex';
+});
+
+// Close Payment Method Popup
+paymentMethodClose.addEventListener('click', () => {
+    paymentMethodPopup.style.display = 'none';
+});
+
+// Payment Method Selection
+paymentMethodOptions.forEach(option => {
+    option.addEventListener('click', () => {
+        const method = option.getAttribute('data-method');
+        paymentMethodPopup.style.display = 'none';
+
+        if (method === 'wallet-to-mpesa') {
+            mpesaMiniPopup.style.display = 'flex';
+        } else if (method === 'wallet-to-bank') {
+            bankMiniPopup.style.display = 'flex';
+        }
+    });
+});
+
+// Close M-Pesa Mini Popup
+mpesaMiniClose.addEventListener('click', () => {
+    mpesaMiniPopup.style.display = 'none';
+});
+
+// Close Bank Mini Popup
+bankMiniClose.addEventListener('click', () => {
+    bankMiniPopup.style.display = 'none';
+});
+
+// M-Pesa Type Selection
+const mpesaTypeOptions = document.querySelectorAll('.payment-option[data-mpesa-type]');
+mpesaTypeOptions.forEach(type => {
+    type.addEventListener('click', () => {
+        const selectedType = type.getAttribute('data-mpesa-type');
+        mpesaPhoneSection.style.display = selectedType === 'phone' ? 'block' : 'none';
+        paybillSection.style.display = selectedType === 'paybill' ? 'block' : 'none';
+    });
+});
+
+// Validate M-Pesa Phone Number
+mpesaPhoneInput.addEventListener('input', () => {
+    const phonePattern = /^[0-9]{10}$/;
+    if (!phonePattern.test(mpesaPhoneInput.value)) {
+        mpesaPhoneError.style.display = 'block';
+        mpesaPhoneInput.setCustomValidity('Invalid phone number');
+    } else {
+        mpesaPhoneError.style.display = 'none';
+        mpesaPhoneInput.setCustomValidity('');
+    }
+});
+
+// M-Pesa Form Submission
+mpesaForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const phoneNumber = mpesaPhoneInput.value;
+    const businessNumber = document.getElementById('paybill-number').value;
+    const accountNumber = document.getElementById('paybill-account ').value;
+
+    if (mpesaPhoneSection.style.display === 'block' && phoneNumber.length === 10) {
+        // Process M-Pesa transfer with phone number
+        console.log(`Processing M-Pesa transfer to phone number: ${phoneNumber}`);
+        mpesaMiniPopup.style.display = 'none';
+    } else if (paybillSection.style.display === 'block' && businessNumber && accountNumber) {
+        // Process M-Pesa transfer with paybill
+        console.log(`Processing M-Pesa transfer with Business No: ${businessNumber} and Account No: ${accountNumber}`);
+        mpesaMiniPopup.style.display = 'none';
+    } else {
+        alert('Please fill in the required fields correctly.');
+    }
+});
+
+// Bank Form Submission
+bankForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const bankName = document.getElementById('bank-name').value;
+    const bankAccount = document.getElementById('bank-account').value;
+
+    if (bankName && bankAccount.length >= 10 && bankAccount.length <= 16) {
+        // Process Bank transfer
+        console.log(`Processing Bank transfer to ${bankName} with Account No: ${bankAccount}`);
+        bankMiniPopup.style.display = 'none';
+    } else {
+        alert('Please fill in the required fields correctly.');
+    }
+});
+
+// Logout Functionality
+const logoutButton = document.getElementById('logout-button');
+
+logoutButton.addEventListener('click', () => {
+    // Show confirmation dialog
+    const confirmLogout = confirm('Are you sure you want to log out?');
+    
+    if (confirmLogout) {
+        // Redirect to login page
+        // Replace 'login.html' with your actual login page URL
+        window.location.href = 'login.html';
+    }
+});
+
+
+      // User Authentication and Dashboard Initialization
+      document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            
+            // Redirect to login if no user
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Initialize Dashboard
+            initializeDashboard(user);
+        });
+
+        function initializeDashboard(user) {
+            // Set User Details
+            document.getElementById('welcomeMessage').textContent = `Welcome, ${user.email.split('@')[0]}`;
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('userInitial').textContent = user.email[0].toUpperCase();
+
+            // Mock Dashboard Statistics
+            document.getElementById('projectCount').textContent = generateRandomNumber(1, 10);
+            document.getElementById('taskCount').textContent = generateRandomNumber(5, 50);
+            document.getElementById('teamCount').textContent = generateRandomNumber(3, 20);
+
+            // Logout Functionality
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            });
+
+            // Navigation Links
+            setupNavigation();
+        }
+
+        function generateRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function setupNavigation() {
+            const links = ['dashboard', 'profile', 'settings', 'support'];
+            
+            links.forEach(link => {
+                document.getElementById(`${link}Link`).addEventListener('click', (e) => {
+                    e.preventDefault();
+                    alert(`${link.charAt(0).toUpperCase() + link.slice(1)} page under development`);
+                });
+            });
+        }
+
+        // Navigation Functionality
+document.querySelectorAll('.nav-button').forEach(button => {
+    button.addEventListener('click', (e) => {
+        e.preventDefault();
+        const buttonText = button.textContent.toLowerCase().trim();
+        
+        switch(buttonText) {
+            case 'dashboard':
+                scrollToSection('dashboard-header');
+                break;
+            case 'transactions':
+                scrollToSection('transfer-overview-section');
+                break;
+            case 'payments':
+                scrollToSection('payment-method-section');
+                break;
+            case 'settings':
+                scrollToSection('connect-section');
+                break;
+            default:
+                console.log('Section not found');
+        }
+    });
+});
+
+// Smooth Scroll Function
+function scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+}
+
+    </script>
+</body>
+</html>

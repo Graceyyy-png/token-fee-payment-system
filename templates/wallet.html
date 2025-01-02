@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zugo Crypto Wallet</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('letter.jpg');
+            background-position: center;
+            background-size: cover;
+        }
+        .wallet-card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .token-card {
+            transition: transform 0.3s ease;
+        }
+        .token-card:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="container mx-auto px-4">
+        <div class="wallet-card rounded-2xl shadow-2xl p-8 max-w-4xl mx-auto">
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center">
+                    <img src="zugo-logo.png" alt="Zugo Wallet" class="w-12 h-12 mr-4">
+                    <h1 class="text-3xl font-bold text-white">Zugo Wallet</h1>
+                </div>
+                <div class="space-x-4">
+                    <button id="login-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button id="signup-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                        <i class="fas fa-user-plus mr-2"></i>Sign Up
+                    </button>
+                </div>
+            </div>
+
+            <!-- Wallet Overview -->
+            <div id="wallet-overview" class="bg-white bg-opacity-10 rounded-xl p-6 mb-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl text-white font-semibold">Total Balance</h2>
+                        <p class="text-4xl text-white font-bold">$15,432.67</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition">
+                            <i class="fas fa-plus mr-2"></i>Add Funds
+                        </button>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition">
+                            <i class="fas fa-wallet mr-2"></i>Withdraw
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="p2p-trading" class="bg-white bg-opacity-10 rounded-2xl p-6 text-white">
+                <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl mb-6">
+                    <h2 class="text-3xl font-bold">Zugo P2P Marketplace</h2>
+                    <p class="text-gray-200">Trade Crypto Directly with Other Users</p>
+                </div>
+            
+                <!-- Filtering and Search Section -->
+                <div class="mb-6 grid md:grid-cols-3 gap-4">
+                    <!-- Cryptocurrency Selector -->
+                    <div>
+                        <label class="block mb-2">Cryptocurrency</label>
+                        <select class="w-full p-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg">
+                            <option>USDT</option>
+                            <option>Bitcoin (BTC)</option>
+                            <option>Ethereum (ETH)</option>
+                            <option>Zugo (ZUG)</option>
+                        </select>
+                    </div>
+            
+                    <!-- Payment Method Selector -->
+                    <div>
+                        <label class="block mb-2">Payment Method</label>
+                        <select class="w-full p-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg">
+                            <option>M-Pesa</option>
+                            <option>Bank Transfer</option>
+                            <option>PayPal</option>
+                            <option>GCash</option>
+                            <option>Airtel Money</option>
+                        </select>
+                    </div>
+            
+                    <!-- Amount Input -->
+                    <div>
+                        <label class="block mb-2">Amount</label>
+                        <input 
+                            type="number" 
+                            placeholder="Enter Amount" 
+                            class="w-full p-3 bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg"
+                        >
+                    </div>
+                </div>
+            
+                <!-- Trading Type Tabs -->
+                <div class="flex mb-6">
+                    <button class="w-1/2 p-3 bg-green-500 text-white rounded-l-lg">Buy</button>
+                    <button class="w-1/2 p-3 bg-red-500 text-white rounded-r-lg">Sell</button>
+                </div>
+            
+                <!-- Available Offers Section -->
+                <div class="bg-white bg-opacity-10 rounded-lg p-6">
+                    <h3 class="text-2xl font-bold mb-4">Available Offers</h3>
+                    
+                    <!-- Offer Cards -->
+                    <div class="space-y-4">
+                        <!-- Individual Offer Card -->
+                        <div class="bg-white bg-opacity-5 border border-white border-opacity-10 rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <img src="user-avatar.png" class="w-10 h-10 rounded-full mr-3">
+                                    <span class="font-semibold">TraderKE123</span>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <span class="bg-green-500 text-white px-2 py-1 rounded">USDT</span>
+                                    <span class="bg-blue-500 text-white px-2 py-1 rounded">M-Pesa</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold">1 USDT = 140 KES</p>
+                                <p class="text-gray-400">Limit: 500 - 50,000 KES</p>
+                                <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg">
+                                    Trade Now
+                                </button>
+                            </div>
+                        </div>
+            
+                        <!-- More Offer Cards (Similar Structure) -->
+                        <div class="bg-white bg-opacity-5 border border-white border-opacity-10 rounded-lg p-4 flex justify-between items-center">
+                            <div>
+                                <div class="flex items-center mb-2">
+                                    <img src="user-avatar.png" class="w-10 h-10 rounded-full mr-3">
+                                    <span class="font-semibold">CryptoNairobi</span>
+                                </div>
+                                <div class="flex space-x-4">
+                                    <span class="bg-green-500 text-white px-2 py-1 rounded">Bitcoin</span>
+                                    <span class="bg-blue-500 text-white px-2 py-1 rounded">Bank Transfer</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xl font-bold">1 BTC = 5,500,000 KES</p>
+                                <p class="text-gray-400">Limit: 0.1 - 1 BTC</p>
+                                <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded-lg">
+                                    Trade Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Trading Safety Information -->
+                <div class="mt-6 bg-yellow-500 bg-opacity-10 p-4 rounded-lg">
+                    <h4 class="font-bold text-yellow-400 mb-2">⚠️ Trading Safety Tips</h4>
+                    <ul class="list-disc list-inside text-yellow-200">
+                        <li>Always verify the trader's reputation</li>
+                        <li>Use platform escrow for secure transactions</li>
+                        <li>Never share personal financial information</li>
+                    </ul>
+                </div>
+            </div>
+
+    <!-- Modals for Transfer, Swap, etc. (Kept from previous version) -->
+    <!-- Transfer Modal -->
+    <div id="transfer-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 w-96">
+            <h2 class="text-2xl font-bold mb-6">Transfer Funds</h2>
+            <input type="text" placeholder="Recipient Address" class="w-full p-3 border rounded-lg mb-4">
+            <input type="number" placeholder="Amount" class="w-full p-3 border rounded-lg mb-4">
+            <div class="flex justify-between">
+                <button class="bg-green-500 text-white px-6 py-2 rounded-lg">Send</button>
+                <button id="close-transfer-modal" class="bg-red-500 text-white px-6 py-2 rounded-lg">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Swap Modal -->
+    <div id="swap-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 w-96">
+             <h2 class="text-2xl font-bold mb-6">Swap Crypto</h2>
+            <div class="flex mb-4">
+                <select class="w-1/2 p-3 border rounded-lg mr-2">
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="ZUG">Zugo (ZUG)</option>
+                </select>
+                <select class="w-1/2 p-3 border rounded-lg">
+                    <option value="ETH">Ethereum (ETH)</option>
+                    <option value="BTC">Bitcoin (BTC)</option>
+                    <option value="ZUG">Zugo (ZUG)</option>
+                </select>
+            </div>
+            <input type="number" placeholder="Amount" class="w-full p-3 border rounded-lg mb-4">
+            <div class="flex justify-between">
+                <button class="bg-blue-500 text-white px-6 py-2 rounded-lg">Swap</button>
+                <button id="close-swap-modal" class="bg-red-500 text-white px-6 py-2 rounded-lg">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const transferBtn = document.getElementById('transfer-btn');
+        const swapBtn = document.getElementById('swap-btn');
+        const closeTransferModal = document.getElementById('close-transfer-modal');
+        const closeSwapModal = document.getElementById('close-swap-modal');
+
+        transferBtn.addEventListener('click', () => {
+            document.getElementById('transfer-modal').classList.remove('hidden');
+        });
+
+        swapBtn.addEventListener('click', () => {
+            document.getElementById('swap-modal').classList.remove('hidden');
+        });
+
+        closeTransferModal.addEventListener('click', () => {
+            document.getElementById('transfer-modal').classList.add('hidden');
+        });
+
+        closeSwapModal.addEventListener('click', () => {
+            document.getElementById('swap-modal').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
